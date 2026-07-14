@@ -4,117 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Coffee Quality Challenge</title>
-<style>
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #FAF5EC;
-    color: #4A2E1F;
-  }
-
-  /* Cabeçalho */
-  header {
-    background: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 30px;
-    border-bottom: 1px solid #eee;
-  }
-  .logo { font-weight: bold; }
-  nav { display: flex; gap: 24px; }
-  nav button {
-    background: none;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-    color: #8B8378;
-    padding: 6px 2px;
-    border-bottom: 2px solid transparent;
-  }
-  nav button.ativo {
-    color: #6B4226;
-    border-bottom: 2px solid #6B4226;
-    font-weight: bold;
-  }
-
-  main { max-width: 900px; margin: 0 auto; padding: 24px; }
-  .pagina { display: none; }
-  .pagina.ativa { display: block; }
-
-  /* Página Home */
-  .hero {
-    background: #F1E7D8;
-    border-radius: 12px;
-    padding: 30px;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .hero h1 { margin: 0 0 8px; }
-
-  .cartoes {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-  .cartao {
-    flex: 1;
-    background: white;
-    border-radius: 12px;
-    padding: 18px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    text-align: center;
-  }
-  .cartao .numero { font-size: 1.6rem; font-weight: bold; color: #3F7D4C; }
-
-  /* Botão padrão */
-  button.principal {
-    background: #6B4226;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-
-  /* Página Avaliações */
-  .cafe-item {
-    background: white;
-    border-radius: 10px;
-    padding: 14px 18px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  }
-  .cafe-item .nome { font-weight: bold; }
-  .cafe-item .produtor { font-size: 0.85rem; color: #8B8378; }
-  .cafe-item .nota { font-size: 1.3rem; font-weight: bold; color: #3F7D4C; }
-
-  form {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    margin-top: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  }
-  form label { display: block; margin: 10px 0 4px; font-weight: bold; font-size: 0.9rem; }
-  form input {
-    width: 100%;
-    padding: 8px 10px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    font-size: 0.9rem;
-  }
-
-  /* Página Ranking */
-  table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
-  th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-  th { background: #F1E7D8; }
-  td.nota { font-weight: bold; color: #3F7D4C; }
-</style>
 </head>
 <body>
 
@@ -129,7 +18,6 @@
 
 <main>
 
-  <!-- PÁGINA HOME -->
   <section id="home" class="pagina ativa">
     <div class="hero">
       <h1>Campeonato de Avaliação de Café</h1>
@@ -152,7 +40,6 @@
     </div>
   </section>
 
-  <!-- PÁGINA AVALIAÇÕES -->
   <section id="avaliacoes" class="pagina">
     <h2>Cafés Avaliados</h2>
     <div id="listaCafes"></div>
@@ -172,7 +59,6 @@
     </form>
   </section>
 
-  <!-- PÁGINA RANKING -->
   <section id="ranking" class="pagina">
     <h2>🏆 Ranking Geral</h2>
     <table>
@@ -186,14 +72,13 @@
 </main>
 
 <script>
-  // Lista de cafés (guardada só na memória, enquanto a página está aberta)
+
   let cafes = [
     { nome: "Bourbon Amarelo", produtor: "Fazenda Boa Vista", nota: 9.3 },
     { nome: "Arara", produtor: "Sítio das Flores", nota: 8.7 },
     { nome: "Catuaí Vermelho", produtor: "Café do Vale", nota: 8.1 }
   ];
 
-  // Troca de página (sem usar nenhuma biblioteca de rotas)
   function mostrarPagina(nome) {
     document.querySelectorAll('.pagina').forEach(p => p.classList.remove('ativa'));
     document.getElementById(nome).classList.add('ativa');
@@ -218,14 +103,12 @@
     atualizarTudo();
   }
 
-  // Atualiza a lista de avaliações, o ranking e os números da home
   function atualizarTudo() {
-    // Home
     document.getElementById('totalCafes').textContent = cafes.length;
     const maior = cafes.length ? Math.max(...cafes.map(c => c.nota)) : 0;
     document.getElementById('maiorNota').textContent = cafes.length ? maior.toFixed(1) : '-';
 
-    // Lista de avaliações
+
     const lista = document.getElementById('listaCafes');
     lista.innerHTML = cafes.map(c => `
       <div class="cafe-item">
@@ -237,7 +120,6 @@
       </div>
     `).join('');
 
-    // Ranking (ordenado do maior para o menor)
     const ordenado = [...cafes].sort((a, b) => b.nota - a.nota);
     const tabela = document.getElementById('tabelaRanking');
     tabela.innerHTML = ordenado.map((c, i) => `

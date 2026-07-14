@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coffee Quality Challenge</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #FAF5EC;
+    color: #4A2E1F;
+  }
+
+  /* Cabeçalho */
+  header {
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 30px;
+    border-bottom: 1px solid #eee;
+  }
+  .logo { font-weight: bold; }
+  nav { display: flex; gap: 24px; }
+  nav button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #8B8378;
+    padding: 6px 2px;
+    border-bottom: 2px solid transparent;
+  }
+  nav button.ativo {
+    color: #6B4226;
+    border-bottom: 2px solid #6B4226;
+    font-weight: bold;
+  }
+
+  main { max-width: 900px; margin: 0 auto; padding: 24px; }
+  .pagina { display: none; }
+  .pagina.ativa { display: block; }
+
+  /* Página Home */
+  .hero {
+    background: #F1E7D8;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .hero h1 { margin: 0 0 8px; }
+
+  .cartoes {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .cartao {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    text-align: center;
+  }
+  .cartao .numero { font-size: 1.6rem; font-weight: bold; color: #3F7D4C; }
+
+  /* Botão padrão */
+  button.principal {
+    background: #6B4226;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  /* Página Avaliações */
+  .cafe-item {
+    background: white;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .cafe-item .nome { font-weight: bold; }
+  .cafe-item .produtor { font-size: 0.85rem; color: #8B8378; }
+  .cafe-item .nota { font-size: 1.3rem; font-weight: bold; color: #3F7D4C; }
+
+  form {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  form label { display: block; margin: 10px 0 4px; font-weight: bold; font-size: 0.9rem; }
+  form input {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 0.9rem;
+  }
+
+  /* Página Ranking */
+  table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
+  th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+  th { background: #F1E7D8; }
+  td.nota { font-weight: bold; color: #3F7D4C; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">☕ Coffee Quality Challenge</div>
+  <nav>
+    <button onclick="mostrarPagina('home')" id="btn-home" class="ativo">Home</button>
+    <button onclick="mostrarPagina('avaliacoes')" id="btn-avaliacoes">Avaliações</button>
+    <button onclick="mostrarPagina('ranking')" id="btn-ranking">Ranking</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- PÁGINA HOME -->
+  <section id="home" class="pagina ativa">
+    <div class="hero">
+      <h1>Campeonato de Avaliação de Café</h1>
+      <p>Avalie e descubra os melhores cafés especiais.</p>
+    </div>
+
+    <div class="cartoes">
+      <div class="cartao">
+        <div>Total de Cafés</div>
+        <div class="numero" id="totalCafes">0</div>
+      </div>
+      <div class="cartao">
+        <div>Maior Nota</div>
+        <div class="numero" id="maiorNota">-</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;">
+      <button class="principal" onclick="mostrarPagina('avaliacoes')">Ver Avaliações</button>
+    </div>
+  </section>
+
+  <!-- PÁGINA AVALIAÇÕES -->
+  <section id="avaliacoes" class="pagina">
+    <h2>Cafés Avaliados</h2>
+    <div id="listaCafes"></div>
+
+    <form onsubmit="salvarCafe(event)">
+      <h3>Nova Avaliação</h3>
+      <label>Nome do Café</label>
+      <input type="text" id="inputNome" required>
+
+      <label>Produtor</label>
+      <input type="text" id="inputProdutor" required>
+
+      <label>Nota (0 a 10)</label>
+      <input type="number" id="inputNota" min="0" max="10" required>
+
+      <button class="principal" style="margin-top:16px;">Salvar</button>
+    </form>
+  </section>
+
+  <!-- PÁGINA RANKING -->
+  <section id="ranking" class="pagina">
+    <h2>🏆 Ranking Geral</h2>
+    <table>
+      <thead>
+        <tr><th>Posição</th><th>Café</th><th>Produtor</th><th>Nota</th></tr>
+      </thead>
+      <tbody id="tabelaRanking"></tbody>
+    </table>
+  </section>
+
+</main>
+
+<script>
+  // Lista de cafés (guardada só na memória, enquanto a página está aberta)
+  let cafes = [
+    { nome: "Bourbon Amarelo", produtor: "Fazenda Boa Vista", nota: 9.3 },
+    { nome: "Arara", produtor: "Sítio das Flores", nota: 8.7 },
+    { nome: "Catuaí Vermelho", produtor: "Café do Vale", nota: 8.1 }
+  ];
+
+  // Troca de página (sem usar nenhuma biblioteca de rotas)
+  function mostrarPagina(nome) {
+    document.querySelectorAll('.pagina').forEach(p => p.classList.remove('ativa'));
+    document.getElementById(nome).classList.add('ativa');
+
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('ativo'));
+    document.getElementById('btn-' + nome).classList.add('ativo');
+
+    atualizarTudo();
+  }
+
+  // Salva um novo café a partir do formulário
+  function salvarCafe(evento) {
+    evento.preventDefault();
+
+    const nome = document.getElementById('inputNome').value;
+    const produtor = document.getElementById('inputProdutor').value;
+    const nota = parseFloat(document.getElementById('inputNota').value);
+
+    cafes.push({ nome, produtor, nota });
+
+    evento.target.reset();
+    atualizarTudo();
+  }
+
+  // Atualiza a lista de avaliações, o ranking e os números da home
+  function atualizarTudo() {
+    // Home
+    document.getElementById('totalCafes').textContent = cafes.length;
+    const maior = cafes.length ? Math.max(...cafes.map(c => c.nota)) : 0;
+    document.getElementById('maiorNota').textContent = cafes.length ? maior.toFixed(1) : '-';
+
+    // Lista de avaliações
+    const lista = document.getElementById('listaCafes');
+    lista.innerHTML = cafes.map(c => `
+      <div class="cafe-item">
+        <div>
+          <div class="nome">${c.nome}</div>
+          <div class="produtor">Produtor: ${c.produtor}</div>
+        </div>
+        <div class="nota">${c.nota.toFixed(1)}</div>
+      </div>
+    `).join('');
+
+    // Ranking (ordenado do maior para o menor)
+    const ordenado = [...cafes].sort((a, b) => b.nota - a.nota);
+    const tabela = document.getElementById('tabelaRanking');
+    tabela.innerHTML = ordenado.map((c, i) => `
+      <tr>
+        <td>${i + 1}º</td>
+        <td>${c.nome}</td>
+        <td>${c.produtor}</td>
+        <td class="nota">${c.nota.toFixed(1)}</td>
+      </tr>
+    `).join('');
+  }
+
+  atualizarTudo();
+</script>
+
+</body>
+</html>
